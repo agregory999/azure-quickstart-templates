@@ -2,12 +2,15 @@
 name: concourse
 
 # replace with `bosh status --uuid`
+# TODO - Look into using Bosh2 and thus the "env" command
 director_uuid: REPLACE_WITH_DIRECTOR_ID
 
 releases:
 - name: concourse
   version: latest
 - name: garden-runc
+  version: latest
+- name: postgres
   version: latest
 
 stemcells:
@@ -34,10 +37,22 @@ instance_groups:
       basic_auth_username: REPLACE_WITH_CONCOURSE_USERNAME
       basic_auth_password: REPLACE_WITH_CONCOURSE_PASSWORD
 
-      postgresql_database: &atc_db atc
+      # NEW for Concourse 3.x - need the signing key
+      token_signing_key: ((token_signing_key))
+
+      postgresql:
+        database: &db_name atc
+        role: &db_role
+          name: concourse
+          password: REPLACE_WITH_CONCOURSE_DB_ROLE_PASSWORD
+
   - name: tsa
     release: concourse
-    properties: {}
+    properties: 
+      log_level: debug
+      host_key: ((tsa_host_key))
+      token_signing_key: ((token_signing_key))
+      authorized_keys: [((worker_key.public_key))]
 
 - name: db
   instances: 1
@@ -49,16 +64,18 @@ instance_groups:
   azs: [z1]
   networks: [{name: concourse}]
   jobs:
-  - name: postgresql
-    release: concourse
+  - release: postgres
+    name: postgres
     properties:
       databases:
-      - name: *atc_db
-        # make up a role and password
-        role: REPLACE_WITH_CONCOURSE_DB_ROLE_NAME
-        password: REPLACE_WITH_CONCOURSE_DB_ROLE_PASSWORD
+        port: 5432
+        databases:
+        - name: *db_name
+        roles:
+        - *db_role
 
 - name: worker
+  # Adjust this how you see fit
   instances: 1
   # replace with a VM type from your BOSH Director's cloud config
   vm_type: concourse_worker
@@ -66,12 +83,15 @@ instance_groups:
   azs: [z1]
   networks: [{name: concourse}]
   jobs:
-  - name: groundcrew
-    release: concourse
-    properties: {}
+  - release: concourse
+    name: worker
+    consumes: {baggageclaim: {from: worker-baggageclaim}}
+    properties:
+      drain_timeout: 10m
+      tsa: {worker_key: ((worker_key))}
   - name: baggageclaim
     release: concourse
-    properties: {}
+    properties: {log_level: debug}
   - name: garden
     release: garden-runc
     properties:
@@ -79,6 +99,13 @@ instance_groups:
         graph_cleanup_threshold_in_mb: REPLACE_WITH_CONCOURSE_GRAPH_CLEANUP_THRESHOLD
         listen_network: tcp
         listen_address: 0.0.0.0:7777
+variables:
+- name: token_signing_key
+  type: rsa
+- name: tsa_host_key
+  type: ssh
+- name: worker_key
+  type: ssh
 
 update:
   canaries: 1

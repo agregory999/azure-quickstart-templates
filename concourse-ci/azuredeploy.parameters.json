@@ -18,7 +18,7 @@
       "value": "admin"
     },
     "concourseWorkerDiskSize": {
-      "value": 30
+      "value": 100
     },
     "environment": {
       "value": "AzureCloud"

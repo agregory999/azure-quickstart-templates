@@ -5,7 +5,7 @@
     "vmName": {
       "type": "string",
       "metadata": {
-        "description": "Name of the vm, will be used as DNS Name for the Public IP used to access the Virtual Machine"
+        "description": "Name of the Jump Box VM, will be used as DNS Name for the Public IP used to access the Virtual Machine that drives the BOS deployment of Concourse.  BOSH 2 will be installed here."
       }
     },
     "adminUsername": {
@@ -34,7 +34,7 @@
     },
     "concourseWorkerDiskSize": {
       "type": "int",
-      "defaultValue": 30,
+      "defaultValue": 100,
       "minValue": 30,
       "maxValue": 1023,
       "metadata": {
@@ -136,15 +136,15 @@
 
     "environmentAzureCloud": {
       "serviceHostBase": "core.windows.net",
-      "boshReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry/bosh?v=260.3",
-      "boshReleaseSha1": "22c79db2a785efa9cbc32c62b8094500e952e170",
-      "boshAzureCPIReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-azure-cpi-release?v=20",
-      "boshAzureCPIReleaseSha1": "fb0180c685714d064b5a467eb6f2b34388fadf0a",
-      "stemcellUrl": "https://bosh.io/d/stemcells/bosh-azure-hyperv-ubuntu-trusty-go_agent?v=3312.15",
-      "stemcellSha1": "109fae8106f8dba70f3dd6f1c5061907afb03757",
-      "boshInitUrl": "https://s3.amazonaws.com/bosh-init-artifacts/bosh-init-0.0.99-linux-amd64",
-      "concourseReleaseUrl": "https://github.com/concourse/concourse/releases/download/v2.6.0/concourse-2.6.0.tgz",
-      "gardenReleaseUrl": "https://github.com/concourse/concourse/releases/download/v2.6.0/garden-runc-1.0.4.tgz"
+      "boshReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry/bosh?v=265.2.0",
+      "boshReleaseSha1": "2df20abb3d41874246991dafaa56374f579f2b31",
+      "boshAzureCPIReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-azure-cpi-release?v=35.2.0",
+      "boshAzureCPIReleaseSha1": "d581c4181d31846e05e59054a15e09621f1e90b1",
+      "stemcellUrl": "https://bosh.io/d/stemcells/bosh-azure-hyperv-ubuntu-trusty-go_agent?v=3541.12",
+      "stemcellSha1": "4118e681d7be33054fcb7b313ccb1fa96a281739",
+      "boshInitUrl": "https://s3.amazonaws.com/bosh-init-artifacts/bosh-init-0.0.103-linux-amd64",
+      "concourseReleaseUrl": "https://bosh.io/d/github.com/concourse/concourse?v=3.13.0",
+      "gardenReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.13.1"
     },
     "environment": "[variables(concat('environment', parameters('environment')))]",
 

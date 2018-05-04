@@ -37,4 +37,10 @@ wget $bosh_init_url
 chmod +x ./bosh-init-*
 sudo mv ./bosh-init-* /usr/local/bin/bosh-init
 
+# Grab Bosh2 (experimental)
+curl -LO https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64
+chmod +x bosh-cli-*
+sudo mv bosh-cli-* /usr/local/bin/bosh2
+bosh2 -v
+
 echo "Finish"

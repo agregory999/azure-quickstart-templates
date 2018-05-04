@@ -1,6 +1,10 @@
 #ChangeLog
 
 ```
+# v2.0.0 (2018-05-04)
+- Updated bosh release, stemcells to latest
+- Changes to allow Concourse 3.x
+
 # v1.0.3 (2017-01-15)
 - Updated bosh release, stemcells, azure cpi to latest version
 - Updated concourse release and garden-runc
